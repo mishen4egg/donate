@@ -1,38 +1,43 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="UTF-8">
-  <style>
-    body {
-      background: transparent;
-      color: gold;
-      font-size: 48px;
-      font-family: Arial, sans-serif;
-      text-align: center;
-    }
-  </style>
+<meta charset="UTF-8">
+<style>
+body {
+    background: transparent;
+    font-family: Arial;
+}
+#alert {
+    display: none;
+    font-size: 48px;
+    color: gold;
+    text-shadow: 2px 2px 10px black;
+}
+</style>
 </head>
 <body>
 
-<div id="donation"></div>
+<div id="alert"></div>
 
 <script>
-async function checkDonation() {
-  const res = await fetch("https://donate-XXXX.onrender.com/donation");
-  const data = await res.json();
+async function check() {
+    const res = await fetch("/last");
+    const data = await res.json();
 
-  if (data) {
-    document.getElementById("donation").innerText =
-      `${data.user} задонатил ${data.amount}⭐\n${data.text}`;
+    if (data.user) {
+        const el = document.getElementById("alert");
+        el.innerText = `⭐ ${data.user} — ${data.amount}`;
+        el.style.display = "block";
 
-    setTimeout(() => {
-      document.getElementById("donation").innerText = "";
-    }, 7000);
-  }
+        setTimeout(() => {
+            el.style.display = "none";
+        }, 5000);
+    }
 }
 
-setInterval(checkDonation, 2000);
+setInterval(check, 2000);
 </script>
 
 </body>
 </html>
+
