@@ -1,67 +1,16 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<style>
-body {
-  margin: 0;
-  background: transparent;
-  overflow: hidden;
-}
-
-#alert {
-  display: none;
-  position: absolute;
-  top: 40%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  text-align: center;
-}
-
-#alert img {
-  width: 300px;
-}
-#text {
-  color: white;
-  font-size: 32px;
-  font-weight: bold;
-  text-shadow: 2px 2px 8px black;
-}
-</style>
-</head>
-
-<body>
-<div id="alert">
-  <img src="/static/alert.gif">
-  <div id="text"></div>
-  <audio id="sound" src="/static/alert.mp3"></audio>
-</div>
+<button onclick="testDonation()" style="
+position: fixed;
+bottom: 20px;
+left: 20px;
+z-index: 9999;
+">
+ТЕСТ ДОНАТ
+</button>
 
 <script>
-async function check() {
-  const r = await fetch("/donation");
-  const d = await r.json();
-
-  if (d) {
-    document.getElementById("text").innerText =
-      d.user + " отправил " + d.amount + " ⭐";
-
-    const alert = document.getElementById("alert");
-    const sound = document.getElementById("sound");
-
-    alert.style.display = "block";
-    sound.currentTime = 0;
-    sound.play();
-
-    setTimeout(() => {
-      alert.style.display = "none";
-    }, 5000);
-  }
+async function testDonation() {
+    const r = await fetch("/test-donation", { method: "POST" });
+    const data = await r.json();
+    showDonation(data.user, data.amount);
 }
-
-setInterval(check, 2000);
 </script>
-</body>
-</html>
-
-
