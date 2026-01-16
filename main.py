@@ -1,26 +1,30 @@
 from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import HTMLResponse
 
 app = FastAPI()
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+last_donation = {
+    "user": "",
+    "amount": "",
+    "text": ""
+}
 
-last_donation = None
+@app.post("/donate")
+def donate(user: str, amount: str, text: str = ""):
+    last_donation["user"] = user
+    last_donation["amount"] = amount
+    last_donation["text"] = text
+    return {"status": "ok"}
 
-@app.post("/donation")
-def push(data: dict):
-    global last_donation
-    last_donation = data
-    return {"ok": True}
-
-@app.get("/donation")
-def pull():
-    global last_donation
-    d = last_donation
-    last_donation = None
-    return d
+@app.get("/overlay", response_class=HTMLResponse)
+def overlay():
+    return f"""
+    <html>
+    <body style="background: transparent; color: white; font-size: 40px;">
+        <div id="donation">
+            {last_donation["user"]} — {last_donation["amount"]}₽<br>
+            {last_donation["text"]}
+        </div>
+    </body>
+    </html>
+    """
