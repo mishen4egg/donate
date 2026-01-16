@@ -4,40 +4,64 @@
 <meta charset="UTF-8">
 <style>
 body {
-    background: transparent;
-    font-family: Arial;
+  margin: 0;
+  background: transparent;
+  overflow: hidden;
 }
+
 #alert {
-    display: none;
-    font-size: 48px;
-    color: gold;
-    text-shadow: 2px 2px 10px black;
+  display: none;
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+#alert img {
+  width: 300px;
+}
+#text {
+  color: white;
+  font-size: 32px;
+  font-weight: bold;
+  text-shadow: 2px 2px 8px black;
 }
 </style>
 </head>
-<body>
 
-<div id="alert"></div>
+<body>
+<div id="alert">
+  <img src="/static/alert.gif">
+  <div id="text"></div>
+  <audio id="sound" src="/static/alert.mp3"></audio>
+</div>
 
 <script>
 async function check() {
-    const res = await fetch("/last");
-    const data = await res.json();
+  const r = await fetch("/donation");
+  const d = await r.json();
 
-    if (data.user) {
-        const el = document.getElementById("alert");
-        el.innerText = `⭐ ${data.user} — ${data.amount}`;
-        el.style.display = "block";
+  if (d) {
+    document.getElementById("text").innerText =
+      d.user + " отправил " + d.amount + " ⭐";
 
-        setTimeout(() => {
-            el.style.display = "none";
-        }, 5000);
-    }
+    const alert = document.getElementById("alert");
+    const sound = document.getElementById("sound");
+
+    alert.style.display = "block";
+    sound.currentTime = 0;
+    sound.play();
+
+    setTimeout(() => {
+      alert.style.display = "none";
+    }, 5000);
+  }
 }
 
 setInterval(check, 2000);
 </script>
-
 </body>
 </html>
+
 
