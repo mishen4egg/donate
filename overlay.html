@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    body {
+      background: transparent;
+      color: gold;
+      font-size: 48px;
+      font-family: Arial, sans-serif;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+<div id="donation"></div>
+
+<script>
+async function checkDonation() {
+  const res = await fetch("https://donate-XXXX.onrender.com/donation");
+  const data = await res.json();
+
+  if (data) {
+    document.getElementById("donation").innerText =
+      `${data.user} задонатил ${data.amount}⭐\n${data.text}`;
+
+    setTimeout(() => {
+      document.getElementById("donation").innerText = "";
+    }, 7000);
+  }
+}
+
+setInterval(checkDonation, 2000);
+</script>
+
+</body>
+</html>
