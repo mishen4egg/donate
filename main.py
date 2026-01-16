@@ -24,4 +24,3 @@ def pull():
     d = last_donation
     last_donation = None
     return d
-add fastapi server
