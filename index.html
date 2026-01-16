@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Donate Overlay</title>
+
+  <style>
+    body {
+      margin: 0;
+      background: transparent;
+      overflow: hidden;
+      font-family: Arial, sans-serif;
+    }
+
+    #donation {
+      position: absolute;
+      top: 40%;
+      width: 100%;
+      text-align: center;
+      font-size: 64px;
+      color: gold;
+      text-shadow: 0 0 10px black;
+      animation: pop 0.4s ease;
+    }
+
+    @keyframes pop {
+      from { transform: scale(0); opacity: 0; }
+      to   { transform: scale(1); opacity: 1; }
+    }
+  </style>
+</head>
+
+<body>
+  <div id="donation"></div>
+
+  <audio id="sound">
+    <source src="https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg">
+  </audio>
+
+  <script>
+    const URL = "https://donate-fh4x.onrender.com/donation"; // ⚠️ ПРОВЕРЬ СВОЙ URL
+    let showing = false;
+
+    async function checkDonation() {
+      if (showing) return;
+
+      try {
+        const res = await fetch(URL);
+        const data = await res.json();
+
+        if (!data) return;
+
+        showing = true;
+
+        const div = document.getElementById("donation");
+        div.innerText = `${data.user} задонатил ${data.amount}⭐\n${data.text}`;
+
+        document.getElementById("sound").play();
+
+        setTimeout(() => {
+          div.innerText = "";
+          showing = false;
+        }, 7000);
+
+      } catch (e) {
+        console.log("ожидание доната...");
+      }
+    }
+
+    setInterval(checkDonation, 2000);
+  </script>
+</body>
+</html>
